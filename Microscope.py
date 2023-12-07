@@ -3,6 +3,7 @@ import os
 import random
 import cv2
 from MicroscopeImage import DummyMicroscopeImage
+import math
 
 class MicroscopeController(ABC):
 
@@ -23,10 +24,8 @@ class MicroscopeController(ABC):
         pass
 
     def discretize_move(self, move_amount):
-        num_steps = round(move_amount / self.step_size)
-        discretized_value = num_steps * self.step_size
-
-        return discretized_value
+        num_steps = math.ceil(move_amount / self.step_size)
+        return num_steps * self.step_size
 
 class DummyMicroscopeController(MicroscopeController):
     def __init__(self) -> None:
