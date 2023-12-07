@@ -5,6 +5,11 @@ import cv2
 from MicroscopeImage import DummyMicroscopeImage
 
 class MicroscopeController(ABC):
+
+    def __init__(self, discrete_move = True, step_size = 0.5) -> None:
+        self.discretize_move = discrete_move
+        self.step_size = step_size
+
     @abstractmethod
     def get_image(self):
         pass
@@ -16,6 +21,12 @@ class MicroscopeController(ABC):
     @abstractmethod
     def is_move_legal(self, move_amount):
         pass
+
+    def discretize_move(self, move_amount):
+        num_steps = round(move_amount / self.step_size)
+        discretized_value = num_steps * self.step_size
+
+        return discretized_value
 
 class DummyMicroscopeController(MicroscopeController):
     def __init__(self) -> None:
@@ -37,6 +48,7 @@ class DummyMicroscopeController(MicroscopeController):
             return os.path.join("dummy_images", f"haydarpasa+{self.image_focuses[self.image_idx]}.jpg")
     
     def move(self, move_amount):
+        move_amount = super().discretize_move(move_amount)
         if self.is_move_legal(move_amount):
             new_focus = self.image_focuses[self.image_idx] + move_amount
             self.image_idx = self.image_focuses.index(new_focus)
