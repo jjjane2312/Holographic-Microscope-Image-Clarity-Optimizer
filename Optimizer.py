@@ -28,7 +28,7 @@ class Optimizer:
         """
         self.microscope_controller.move(move_amount)
         image = self.microscope_controller.get_image()
-        new_clarity = self.clarity_metric(image, self.microscope_controller.get_current_focus()) #TODO: Remove img_index
+        new_clarity = self.clarity_metric(image)
         print(new_clarity)
         grad = new_clarity - previous_clarity
         self.microscope_controller.move((-1)*move_amount)
@@ -37,7 +37,7 @@ class Optimizer:
         if new_clarity < previous_clarity:
             self.microscope_controller.move((-1)*move_amount)
             image = self.microscope_controller.get_image()
-            new_clarity_2 = self.clarity_metric(image, self.microscope_controller.get_current_focus()) #TODO: Remove img_index
+            new_clarity_2 = self.clarity_metric(image)
             self.microscope_controller.move(move_amount)
 
 
@@ -61,7 +61,7 @@ class Optimizer:
         """
         previous_clarity = float('-inf')
         image = self.microscope_controller.get_image()
-        current_clarity = self.clarity_metric(image, self.microscope_controller.get_current_focus()) #TODO: Remove img_index
+        current_clarity = self.clarity_metric(image)
 
 
         while not self.convergence_check(previous_clarity, current_clarity):
@@ -76,13 +76,13 @@ class Optimizer:
 
             new_img = self.microscope_controller.get_image()
             previous_clarity = current_clarity
-            current_clarity = self.clarity_metric(new_img, self.microscope_controller.get_current_focus()) #TODO: Remove img_index
+            current_clarity = self.clarity_metric(new_img)
             print()
         
         print("image focus:", self.microscope_controller.get_current_focus())
         print("previous clarity:", previous_clarity)
         print("clarity:", current_clarity)
-        return self.microscope_controller.get_image()
+        return self.microscope_controller.get_image().get_image_tensor()
     
 def main():
     optimizer = Optimizer(

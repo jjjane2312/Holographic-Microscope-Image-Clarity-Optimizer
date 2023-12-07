@@ -2,7 +2,8 @@ import cv2
 import os
 import numpy as np
 
-def DummyClarityMetric(img, img_focus):
+def DummyClarityMetric(img):
+    img_focus = img.get_focus()
     focus_to_clarity = {
         -3.0 : 10,
         -2.5 : 10.5,
